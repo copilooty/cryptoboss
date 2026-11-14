@@ -1,99 +1,59 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Как Али восстановил механику настольной игры по фотографиям и собрал CryptoBoss Online на HTML, CSS, JavaScript, PHP и MySQL.">
-<title>Как я собрал CryptoBoss Online — Али</title>
-<style>
-:root{color-scheme:dark;--bg:#0c0d10;--panel:#14151a;--line:#303138;--text:#f6f3e8;--muted:#b9bac2;--green:#58d6aa;--pink:#e84b9d;--purple:#8352d6;--gold:#f3aa28;--cyan:#5af3ff}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 91% 11%,#251628 0,transparent 37%),var(--bg);color:var(--text);font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}
-a{color:inherit}a:focus-visible,button:focus-visible{outline:3px solid var(--cyan);outline-offset:5px}
-.wrap{width:min(1120px,calc(100% - 64px));margin:auto}.mono,.eyebrow,code,.plate-tag,.nav a,.foot{font-family:ui-monospace,Consolas,monospace}.nav{display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:74px;border-bottom:1px solid var(--line)}.nav a{text-decoration:none;font-size:.8rem}.nav a:hover{color:var(--green)}.nav-list{display:flex;gap:22px;flex-wrap:wrap}.logo{font-weight:900;white-space:nowrap;letter-spacing:.08em}.logo span{color:var(--gold)}.eyebrow{color:var(--green);letter-spacing:.11em;font-size:.75rem;font-weight:800;text-transform:uppercase}.skip{position:fixed;left:12px;top:12px;z-index:5;background:var(--green);color:var(--bg);padding:8px;transform:translateY(-150%)}.skip:focus{transform:none}
-.hero{min-height:620px;display:grid;grid-template-columns:1fr .88fr;align-items:center;gap:48px;padding-block:65px 75px}.hero h1{font-size:clamp(3rem,6.6vw,6.3rem);font-weight:900;letter-spacing:-.08em;line-height:.91;margin:14px 0 25px}.hero h1 span{display:block;color:var(--gold)}.lead{font-size:clamp(1rem,1.75vw,1.25rem);color:var(--muted);max-width:43ch;margin:0 0 26px}.button{display:inline-flex;align-items:center;gap:18px;background:var(--green);color:#0b2119;font-size:.9rem;font-weight:850;text-decoration:none;padding:12px 17px;border-radius:6px}.button:hover{background:#8ae5c5}.stamp{margin-top:26px;font-size:.74rem;color:var(--muted);letter-spacing:.08em}
-.plate{margin:0;border:1px solid #393542;border-radius:14px;padding:18px;background:linear-gradient(160deg,#20202a,#14151a 70%);box-shadow:0 24px 70px #0007;min-width:0}.plate-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:13px}.plate-tag{font-size:.68rem;letter-spacing:.08em;color:var(--muted)}.light{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:7px;box-shadow:0 0 12px #58d6aa80}
-.board{aspect-ratio:1;position:relative;isolation:isolate;display:grid;place-items:center;overflow:hidden;border:1px solid #383741;border-radius:9px;background:linear-gradient(#ffffff07 1px,transparent 1px),linear-gradient(90deg,#ffffff07 1px,transparent 1px),radial-gradient(ellipse at 50% 60%,#2b253b,#111317 72%);background-size:18px 18px,18px 18px,100% 100%}
-.board svg{display:block;width:100%;height:auto}.board .tile{stroke:#ffffff48;stroke-width:1}.plate figcaption{color:var(--muted);font-size:.77rem;margin-top:11px}.board-caption{color:var(--muted)}
-section{scroll-margin-top:22px}.section{border-top:1px solid var(--line);padding:60px 0}.section h2{font-size:clamp(2rem,4.5vw,3.6rem);margin:4px 0 18px;letter-spacing:-.065em;line-height:1.04}.section p{margin:0;color:var(--muted)}.section h3{font-size:1.12rem;margin:0 0 6px;line-height:1.3}.split{display:grid;grid-template-columns:.7fr 1.3fr;gap:45px}.trail{list-style:none;margin:0;padding:0;counter-reset:step}.trail li{position:relative;padding:18px 0 18px 54px;border-bottom:1px solid var(--line);counter-increment:step}.trail li:first-child{padding-top:0}.trail li:last-child{border-bottom:0;padding-bottom:0}.trail li::before{content:counter(step,decimal-leading-zero);position:absolute;left:0;font:700 .88rem/1.4 ui-monospace,Consolas,monospace;color:var(--gold)}.stack{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));margin:25px 0 0;border:1px solid var(--line);border-radius:10px;overflow:hidden}.stack div{padding:17px;background:var(--panel);border-right:1px solid var(--line)}.stack div:last-child{border-right:0}.stack dt{font-weight:850;font-size:1.1rem;color:var(--green);margin-bottom:8px}.stack dd{margin:0;color:var(--muted);font-size:.86rem;line-height:1.5}.flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;list-style:none;margin:25px 0 0;padding:0}.flow li{padding:16px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}.flow strong{display:block;margin:0 0 5px;color:var(--cyan)}.flow p{font-size:.9rem}
-.files{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px;margin:20px 0 0}.files div{padding:12px 0;border-bottom:1px solid var(--line)}.files code{color:var(--gold);font-size:.84rem;overflow-wrap:anywhere}.files dd{color:var(--muted);font-size:.87rem;margin:3px 0 0}.foot{display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid var(--line);padding-block:20px 30px;color:var(--muted);font-size:.75rem}.foot a:hover{color:var(--green)}
-@media(max-width:850px){.hero{gap:24px;min-height:0}.stack{grid-template-columns:repeat(2,minmax(0,1fr))}.stack div{border-bottom:1px solid var(--line)}.stack div:nth-child(even){border-right:0}.stack div:last-child{grid-column:1/-1;border-bottom:0}}
-@media(max-width:620px){.wrap{width:calc(100% - 32px)}.nav{align-items:flex-start;flex-direction:column;justify-content:center;padding-block:14px;gap:7px}.nav-list{gap:16px}.hero,.split{grid-template-columns:1fr}.hero{padding-block:38px;gap:28px}.hero h1{font-size:clamp(2.9rem,12vw,4.5rem)}.plate{padding:12px}.section{padding-block:38px}.split{gap:22px}.flow,.files{grid-template-columns:1fr}.foot{flex-wrap:wrap}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="description" content="CryptoBoss Online — настольная игра о криптовалютах, рынке и майнинге. Создай комнату и играй с друзьями.">
+  <title>CryptoBoss Online — играй с друзьями</title>
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.js"></script>
 </head>
-<body id="top">
-<a class="skip" href="#main">К содержанию</a>
-<header class="wrap nav">
-<a class="logo" href="#top">CRYPTO<span>BOSS</span></a>
-<nav class="nav-list" aria-label="Разделы страницы"><a href="#process">Сборка</a><a href="#stack">Технологии</a><a href="#sources">Источники</a></nav>
-</header>
-<main id="main" class="wrap">
-<div class="hero">
-<div>
-<p class="eyebrow">Али / история проекта</p>
-<h1>Как я собрал <span>CryptoBoss</span></h1>
-<p class="lead">По фотографиям настольной игры я восстановил поле и механику ходов. Затем придумал собственный дизайн и собрал веб-версию, в которую можно играть одному или с друзьями.</p>
-<a class="button" href="#process">Смотреть, как устроен проект <span aria-hidden="true">↓</span></a>
-<div class="stamp mono">ПОЛЕ · БИРЖА · МАЙНИНГ</div>
-</div>
-<figure class="plate">
-<div class="plate-bar"><span class="plate-tag"><i class="light"></i> CRYPTOBOSS ONLINE</span><span class="plate-tag">24 КЛЕТКИ</span></div>
-<div class="board">
-<svg viewBox="0 0 420 420" role="img" aria-labelledby="board-title">
-<title id="board-title">Стилизованная схема поля из 24 клеток с двумя игровыми фишками</title>
-<defs><rect id="tile" width="46" height="46" rx="6" class="tile"/></defs>
-<g>
-<use href="#tile" x="30" y="30" fill="#58d6aa"/><use href="#tile" x="82" y="30" fill="#58d6aa"/><use href="#tile" x="134" y="30" fill="#f6f3e8"/><use href="#tile" x="186" y="30" fill="#2d2d2d"/><use href="#tile" x="238" y="30" fill="#8352d6"/><use href="#tile" x="290" y="30" fill="#e84b9d"/><use href="#tile" x="342" y="30" fill="#8352d6"/>
-<use href="#tile" x="342" y="82" fill="#f3aa28"/><use href="#tile" x="342" y="134" fill="#2d2d2d"/><use href="#tile" x="342" y="186" fill="#e84b9d"/><use href="#tile" x="342" y="238" fill="#58d6aa"/><use href="#tile" x="342" y="290" fill="#f6f3e8"/>
-<use href="#tile" x="342" y="342" fill="#2d2d2d"/><use href="#tile" x="290" y="342" fill="#8352d6"/><use href="#tile" x="238" y="342" fill="#e84b9d"/><use href="#tile" x="186" y="342" fill="#f3aa28"/><use href="#tile" x="134" y="342" fill="#2d2d2d"/><use href="#tile" x="82" y="342" fill="#8352d6"/><use href="#tile" x="30" y="342" fill="#f6f3e8"/>
-<use href="#tile" x="30" y="290" fill="#58d6aa"/><use href="#tile" x="30" y="238" fill="#2d2d2d"/><use href="#tile" x="30" y="186" fill="#8352d6"/><use href="#tile" x="30" y="134" fill="#e84b9d"/><use href="#tile" x="30" y="82" fill="#f3aa28"/>
-</g>
-<rect x="98" y="98" width="223" height="223" rx="9" fill="#14151a" stroke="#605568" stroke-dasharray="3 6"/>
-<text x="210" y="173" text-anchor="middle" fill="#f6f3e8" font-family="system-ui,sans-serif" font-size="39" font-weight="850" letter-spacing="-2">CRYPTO</text>
-<rect x="137" y="188" width="146" height="53" rx="5" fill="#f3aa28" transform="rotate(-5 210 215)"/>
-<text x="210" y="226" text-anchor="middle" fill="#0c0d10" font-family="system-ui,sans-serif" font-size="43" font-weight="900" letter-spacing="-2">BOSS</text>
-<text x="210" y="274" text-anchor="middle" fill="#b9bac2" font-family="monospace" font-size="12" letter-spacing="3">ONLINE</text>
-<circle cx="53" cy="53" r="13" fill="#52c7ff" stroke="#0c0d10" stroke-width="3"/>
-<circle cx="365" cy="209" r="13" fill="#ff5d6c" stroke="#0c0d10" stroke-width="3"/>
-</svg>
-</div>
-<figcaption>Схема игрового поля для этой страницы</figcaption>
-</figure>
-</div>
-<section id="process" class="section split">
-<div><p class="eyebrow">01 / Сборка</p><h2>От фотографий к игре в браузере</h2></div>
-<ol class="trail">
-<li><h3>Разобрал настольную игру по фото</h3><p>Фотографии были референсом для поля и игровых элементов. По ним я восстановил основу игры и перенёс её в цифровой формат.</p></li>
-<li><h3>Придумал дизайн сайта</h3><p>Выбрал тёмный фон, цветные клетки, яркие кнопки и отдельные панели для биржи, фермы и истории. Цвет помогает быстро отличить фишки и найти нужное действие.</p></li>
-<li><h3>Связал интерфейс с сервером</h3><p>Добавил комнаты с приглашением, очередность ходов и сохранение партии. Сервер считает броски, проверяет сделки и определяет победителя по итоговому капиталу.</p></li>
-</ol>
-</section>
-<section id="stack" class="section">
-<p class="eyebrow">02 / Технологии</p><h2>На чём работает игра</h2>
-<dl class="stack">
-<div><dt>HTML</dt><dd>Разметка лобби и игрового экрана.</dd></div>
-<div><dt>CSS</dt><dd>Палитра, игровое поле и раскладка для телефона и ПК.</dd></div>
-<div><dt>JavaScript</dt><dd>Обрабатывает кнопки, отправляет запросы и обновляет экран.</dd></div>
-<div><dt>PHP</dt><dd>Создаёт комнаты, проверяет ходы и применяет правила.</dd></div>
-<div><dt>SQL / MySQL</dt><dd>Хранит комнаты, игроков, цены, активы, слоты и историю.</dd></div>
-</dl>
-<ol class="flow" aria-label="Как обрабатывается ход">
-<li><strong>01 · Браузер</strong><p>Игрок нажимает «Бросить кубик хода». JavaScript отправляет запрос.</p></li>
-<li><strong>02 · Сервер</strong><p>PHP проверяет очередь, рассчитывает результат и сохраняет новое состояние в MySQL.</p></li>
-<li><strong>03 · Экран игры</strong><p>Браузер получает состояние партии и показывает обновлённую позицию фишки.</p></li>
-</ol>
-</section>
-<section id="sources" class="section">
-<p class="eyebrow">03 / Источники</p><h2>Откуда взял информацию</h2>
-<p>Основа игры взята из фотографий настольной версии. Внешний вид сайта я придумал сам. Разобраться в веб-реализации можно по файлам проекта.</p>
-<dl class="files">
-<div><dt><code>index.php · game.php</code></dt><dd>Лобби и вход на экран партии.</dd></div>
-<div><dt><code>assets/css/style.css</code></dt><dd>Цвета, оформление и размеры элементов.</dd></div>
-<div><dt><code>assets/js/game.js · api/game.php</code></dt><dd>Интерфейс, запросы к серверу и правила ходов.</dd></div>
-<div><dt><code>db/install.sql · RULES_ONLINE_RU.txt</code></dt><dd>Структура базы и описание правил онлайн-версии.</dd></div>
-</dl>
-</section>
-</main>
-<footer class="wrap foot"><span>АЛИ / CRYPTOBOSS ONLINE</span><a href="#top">Наверх ↑</a></footer>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="CryptoBoss Online">
+      <span class="brand-mark">₿</span> CRYPTO<span class="brand-gold">BOSS</span>
+    </a>
+    <div class="topbar-right">
+      <span class="online-indicator"><i></i><span id="connection-label">Подключение...</span></span>
+      <a class="about-link" href="./about.html">О проекте <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+
+  <main>
+    <section id="lobby" class="lobby">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-line"></span> БИРЖА · МАЙНИНГ · СДЕЛКИ</p>
+        <h1>Стань<br><span>крипто-боссом.</span></h1>
+        <p class="hero-lead">Покупай активы и участки, строй майнинг-ферму, торгуй на рынке и обойди друзей по капиталу.</p>
+        <div class="hero-facts">
+          <span><b>24</b> клетки</span><span><b>2–4</b> игрока</span><span><b>16</b> раундов</span>
+        </div>
+      </div>
+      <div class="lobby-card">
+        <div class="card-heading">
+          <span class="eyebrow">НОВАЯ ПАРТИЯ</span>
+          <span class="step-badge">01</span>
+        </div>
+        <label class="field-label" for="player-name">ТВОЁ ИМЯ</label>
+        <input id="player-name" class="text-input" maxlength="20" placeholder="Например, Али" autocomplete="nickname">
+        <button id="create-room" class="button button-primary"><span>Создать комнату</span><span aria-hidden="true">→</span></button>
+        <div class="divider"><span>ИЛИ ВОЙТИ К ДРУЗЬЯМ</span></div>
+        <label class="field-label" for="room-code">КОД ПРИГЛАШЕНИЯ</label>
+        <div class="join-fields">
+          <input id="room-code" class="text-input code-input" maxlength="6" placeholder="ABC123" autocomplete="off">
+          <button id="join-room" class="button button-secondary">Войти</button>
+        </div>
+        <p class="card-note">Создатель отправит код — просто вставь его сюда.</p>
+      </div>
+      <p class="rules-note"><span class="note-icon">i</span> Играй по сети в реальном времени. Создатель комнаты запускает партию, когда подключится хотя бы один друг.</p>
+    </section>
+
+    <section id="room-panel" class="room-panel" hidden></section>
+    <section id="game-panel" class="game-panel" hidden></section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <footer class="footer"><span>CRYPTOBOSS ONLINE</span><span>Покупай с умом. Играй по-крупному.</span></footer>
 </body>
 </html>
