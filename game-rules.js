@@ -62,7 +62,7 @@ export function createGameState(players) {
     })),
     market: initialMarket(),
     properties: {},
-    log: ["Партия началась. У каждого игрока 1 200 USDT."]
+    log: ["Партия началась. У каждого игрока 1 200 USD."]
   };
 }
 
@@ -122,7 +122,7 @@ function charge(state, player, amount, reason) {
     }
     log(state, `${player.name} не смог оплатить ${reason} и выбыл из игры.`);
   } else {
-    log(state, `${player.name}: −${amount} USDT (${reason}).`);
+    log(state, `${player.name}: −${amount} USD (${reason}).`);
   }
 }
 
@@ -133,12 +133,12 @@ function resolveLanding(state, player, random) {
 
   if (tile.type === "start") {
     player.cash += 100;
-    log(state, `${player.name} получил 100 USDT за остановку на старте.`);
+    log(state, `${player.name} получил 100 USD за остановку на старте.`);
   } else if (tile.type === "property") {
     const owner = state.properties[player.position];
     if (!owner) {
       state.pendingPurchase = player.position;
-      log(state, `Участок «${tile.name}» доступен за ${tile.price} USDT.`);
+      log(state, `Участок «${tile.name}» доступен за ${tile.price} USD.`);
     } else if (owner !== player.id) {
       const ownerPlayer = state.players.find((item) => item.id === owner);
       const rent = tile.rent;
@@ -150,20 +150,20 @@ function resolveLanding(state, player, random) {
   } else if (tile.type === "event") {
     const amount = 40 + Math.floor(random() * 81);
     player.cash += amount;
-    log(state, `${player.name} получил ${amount} USDT за ${tile.name.toLowerCase()}.`);
+    log(state, `${player.name} получил ${amount} USD за ${tile.name.toLowerCase()}.`);
   }
 
   if (!player.bankrupt && state.round > 1 && player.miners > 0) {
     const income = player.miners * 25;
     player.cash += income;
-    log(state, `${player.name} получил ${income} USDT от майнинг-фермы.`);
+    log(state, `${player.name} получил ${income} USD от майнинг-фермы.`);
   }
 
   const symbol = ASSETS[Math.floor(random() * ASSETS.length)].symbol;
   const previousPrice = state.market[symbol];
   const change = Math.max(1, Math.round(previousPrice * (Math.floor(random() * 21) - 10) / 100));
   state.market[symbol] = Math.max(10, previousPrice + (random() < 0.5 ? -change : change));
-  log(state, `${symbol}: новая цена ${state.market[symbol]} USDT.`);
+  log(state, `${symbol}: новая цена ${state.market[symbol]} USD.`);
   if (player.bankrupt) finishIfNeeded(state);
 }
 
@@ -181,7 +181,7 @@ export function applyAction(source, playerId, action, random = Math.random) {
     player.position = (oldPosition + roll) % BOARD.length;
     if (player.position < oldPosition) {
       player.cash += 150;
-      log(state, `${player.name} прошёл старт и получил 150 USDT.`);
+      log(state, `${player.name} прошёл старт и получил 150 USD.`);
     }
     state.lastRoll = roll;
     state.phase = "decision";
@@ -197,10 +197,10 @@ export function applyAction(source, playerId, action, random = Math.random) {
     const tile = BOARD[position];
     state.pendingPurchase = null;
     if (action.type === "buy-property") {
-      if (player.cash < tile.price) throw new Error("Недостаточно USDT для покупки.");
+      if (player.cash < tile.price) throw new Error("Недостаточно USD для покупки.");
       player.cash -= tile.price;
       state.properties[position] = player.id;
-      log(state, `${player.name} купил участок «${tile.name}» за ${tile.price} USDT.`);
+      log(state, `${player.name} купил участок «${tile.name}» за ${tile.price} USD.`);
     } else {
       log(state, `${player.name} отказался от участка «${tile.name}».`);
     }
@@ -212,26 +212,26 @@ export function applyAction(source, playerId, action, random = Math.random) {
     }
     const value = state.market[symbol] * quantity;
     if (action.type === "buy-crypto") {
-      if (player.cash < value) throw new Error("Недостаточно USDT для покупки.");
+      if (player.cash < value) throw new Error("Недостаточно USD для покупки.");
       player.cash -= value;
       player.holdings[symbol] = (player.holdings[symbol] || 0) + quantity;
-      log(state, `${player.name} купил ${quantity} ${symbol} за ${value} USDT.`);
+      log(state, `${player.name} купил ${quantity} ${symbol} за ${value} USD.`);
     } else {
       if ((player.holdings[symbol] || 0) < quantity) throw new Error("Недостаточно монет для продажи.");
       player.cash += value;
       player.holdings[symbol] -= quantity;
       if (player.holdings[symbol] === 0) delete player.holdings[symbol];
-      log(state, `${player.name} продал ${quantity} ${symbol} за ${value} USDT.`);
+      log(state, `${player.name} продал ${quantity} ${symbol} за ${value} USD.`);
     }
   } else if (action.type === "buy-miner") {
     if (BOARD[player.position].type !== "mining") throw new Error("Ферму можно расширить только на клетке «Майнинг».");
     const quantity = Number(action.quantity);
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > 5) throw new Error("Можно купить от 1 до 5 установок.");
     const cost = quantity * 150;
-    if (player.cash < cost) throw new Error("Недостаточно USDT для покупки установок.");
+    if (player.cash < cost) throw new Error("Недостаточно USD для покупки установок.");
     player.cash -= cost;
     player.miners += quantity;
-    log(state, `${player.name} купил ${quantity} майнинг-установок за ${cost} USDT.`);
+    log(state, `${player.name} купил ${quantity} майнинг-установок за ${cost} USD.`);
   } else if (action.type === "end-turn") {
     if (state.pendingPurchase !== null) throw new Error("Купите участок или откажитесь от него.");
     log(state, `${player.name} завершил ход.`);

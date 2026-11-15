@@ -149,7 +149,7 @@ function renderBoard(game) {
     const [row, column] = borderCells[index];
     const propertyOwner = game.properties[index];
     const tilePrice = tile.type === "property"
-      ? `<span class="tile-price">${tile.price} ₮${propertyOwner === room.you ? " · ВАШ" : propertyOwner !== undefined ? " · ЗАНЯТ" : ""}</span>`
+      ? `<span class="tile-price">${tile.price} $${propertyOwner === room.you ? " · ВАШ" : propertyOwner !== undefined ? " · ЗАНЯТ" : ""}</span>`
       : "";
     return `
       <div class="board-tile type-${tile.type} ${game.landed === index ? "is-landed" : ""}"
@@ -187,8 +187,8 @@ function renderPlayers(game) {
       <div class="game-player ${game.current === index && game.status !== "finished" ? "is-current" : ""} ${player.bankrupt ? "is-bankrupt" : ""}">
         <i class="player-dot" style="background:${colors[index]}"></i>
         <span class="game-player-name">${escapeHtml(player.name)}</span>
-        <span class="game-player-worth">${worth.toLocaleString("ru-RU")} ₮</span>
-        <span class="game-player-meta">${player.cash.toLocaleString("ru-RU")} ₮ · ${player.miners} ферм · ${Object.values(player.holdings).reduce((a, b) => a + b, 0)} монет</span>
+        <span class="game-player-worth">${worth.toLocaleString("ru-RU")} $</span>
+        <span class="game-player-meta">${player.cash.toLocaleString("ru-RU")} $ · ${player.miners} ферм · ${Object.values(player.holdings).reduce((a, b) => a + b, 0)} монет</span>
       </div>`;
   }).join("");
 }
@@ -200,7 +200,7 @@ function renderMarket(game, canAct) {
         <div class="market-row">
           <span class="coin-symbol">${asset.symbol}</span>
           <span class="coin-name">${asset.name}</span>
-          <span class="coin-price">${game.market[asset.symbol].toLocaleString("ru-RU")} ₮</span>
+          <span class="coin-price">${game.market[asset.symbol].toLocaleString("ru-RU")} $</span>
         </div>`).join("")}
     </div>
     ${canAct ? `
@@ -227,7 +227,7 @@ function actionMessage(game, canAct) {
   if (!canAct) return `<p class="action-message">Ожидание хода игрока ${escapeHtml(game.players[game.current].name)}…</p>`;
   if (game.pendingPurchase !== null) {
     const tile = BOARD[game.pendingPurchase];
-    return `<p class="action-message">Участок «${escapeHtml(tile.name)}» стоит ${tile.price} USDT. Купить?</p>
+    return `<p class="action-message">Участок «${escapeHtml(tile.name)}» стоит ${tile.price} USD. Купить?</p>
       <div class="action-controls">
         <button class="button button-primary" data-action="buy-property">Купить</button>
         <button class="button button-muted" data-action="skip-property">Пропустить</button>
@@ -263,7 +263,7 @@ function renderGame() {
       <div class="board-shell"><div class="board-grid">${renderBoard(game)}</div></div>
       <div class="side-stack">
         <section class="side-card"><h2 class="side-title">Капитал игроков</h2><div class="player-list">${renderPlayers(game)}</div></section>
-        <section class="side-card"><h2 class="side-title">Крипторынок <span>USDT</span></h2>${renderMarket(game, canAct)}</section>
+        <section class="side-card"><h2 class="side-title">Крипторынок <span>USD</span></h2>${renderMarket(game, canAct)}</section>
         <section class="side-card action-card"><h2 class="side-title">Твой ход</h2>${actionMessage(game, canAct)}</section>
         <section class="side-card"><h2 class="side-title">История партии</h2><ol class="log-list">${recentEvents}</ol></section>
       </div>
