@@ -58,6 +58,7 @@ export function createGameState(players) {
       position: 0,
       holdings: {},
       miners: 0,
+      farms: {},
       bankrupt: false
     })),
     market: initialMarket(),
@@ -117,12 +118,23 @@ function charge(state, player, amount, reason) {
     player.bankrupt = true;
     player.holdings = {};
     player.miners = 0;
+    player.farms = {};
     for (const [position, owner] of Object.entries(state.properties)) {
       if (owner === player.id) delete state.properties[position];
     }
     log(state, `${player.name} не смог оплатить ${reason} и выбыл из игры.`);
   } else {
     log(state, `${player.name}: −${amount} USD (${reason}).`);
+  }
+}
+
+function mineFarmCoins(state, player) {
+  if (!player.farms || Object.keys(player.farms).length === 0) return;
+  for (const [symbol, count] of Object.entries(player.farms)) {
+    if (!count) continue;
+    const mined = count;
+    player.holdings[symbol] = (player.holdings[symbol] || 0) + mined;
+    log(state, `${player.name} добыл ${mined} ${symbol} на фермах.`);
   }
 }
 
@@ -153,10 +165,11 @@ function resolveLanding(state, player, random) {
     log(state, `${player.name} получил ${amount} USD за ${tile.name.toLowerCase()}.`);
   }
 
-  if (!player.bankrupt && state.round > 1 && player.miners > 0) {
+  if (!player.bankrupt && player.miners > 0) {
     const income = player.miners * 25;
     player.cash += income;
-    log(state, `${player.name} получил ${income} USD от майнинг-фермы.`);
+    log(state, `${player.name} получил ${income} USD от майнинг-ферм.`);
+    mineFarmCoins(state, player);
   }
 
   const symbol = ASSETS[Math.floor(random() * ASSETS.length)].symbol;
@@ -225,13 +238,16 @@ export function applyAction(source, playerId, action, random = Math.random) {
     }
   } else if (action.type === "buy-miner") {
     if (BOARD[player.position].type !== "mining") throw new Error("Ферму можно расширить только на клетке «Майнинг».");
+    const symbol = String(action.symbol || "BTC");
     const quantity = Number(action.quantity);
+    if (!ASSETS.some((asset) => asset.symbol === symbol)) throw new Error("Укажите валюта для майнинга.");
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > 5) throw new Error("Можно купить от 1 до 5 установок.");
     const cost = quantity * 150;
     if (player.cash < cost) throw new Error("Недостаточно USD для покупки установок.");
     player.cash -= cost;
     player.miners += quantity;
-    log(state, `${player.name} купил ${quantity} майнинг-установок за ${cost} USD.`);
+    player.farms[symbol] = (player.farms[symbol] || 0) + quantity;
+    log(state, `${player.name} купил ${quantity} ${symbol}-ферм за ${cost} USD.`);
   } else if (action.type === "end-turn") {
     if (state.pendingPurchase !== null) throw new Error("Купите участок или откажитесь от него.");
     log(state, `${player.name} завершил ход.`);

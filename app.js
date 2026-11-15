@@ -192,12 +192,16 @@ function renderPlayers(game) {
         .filter(([, owner]) => owner === index)
         .reduce((sum, [position]) => sum + BOARD[Number(position)].price, 0)
       + player.miners * 60;
+    const farmSummary = Object.entries(player.farms || {})
+      .filter(([, count]) => count > 0)
+      .map(([symbol, count]) => `${symbol}: ${count}`)
+      .join(" · ") || "нет ферм";
     return `
       <div class="game-player ${game.current === index && game.status !== "finished" ? "is-current" : ""} ${player.bankrupt ? "is-bankrupt" : ""}">
         <i class="player-dot" style="background:${colors[index]}"></i>
         <span class="game-player-name">${escapeHtml(player.name)}</span>
         <span class="game-player-worth">${worth.toLocaleString("ru-RU")} $</span>
-        <span class="game-player-meta">${player.cash.toLocaleString("ru-RU")} $ · ${player.miners} ферм · ${Object.values(player.holdings).reduce((a, b) => a + b, 0)} монет</span>
+        <span class="game-player-meta">${player.cash.toLocaleString("ru-RU")} $ · ${player.miners} ферм · ${farmSummary}</span>
       </div>`;
   }).join("");
 }
@@ -251,11 +255,15 @@ function actionMessage(game, canAct) {
     ? `<label class="sr-only" for="miner-quantity">Количество установок</label>
       <select id="miner-quantity" class="select-input">
         ${Array.from({ length: 5 }, (_, i) => `<option value="${i + 1}">${i + 1} установ.</option>`).join("")}
+      </select>
+      <label class="sr-only" for="miner-asset">Монета для майнинга</label>
+      <select id="miner-asset" class="select-input">
+        ${ASSETS.map((asset) => `<option value="${asset.symbol}">${asset.symbol}</option>`).join("")}
       </select>`
     : "";
-  return `<p class="action-message">${tile.type === "mining" ? "Инвестируй в ферму или продолжай ход." : "Можешь совершить сделку на бирже, а затем передать ход."}</p>
+  return `<p class="action-message">${tile.type === "mining" ? "Выбери монету и купи фермы, чтобы они майнили новые токены каждый ход." : "Можешь совершить сделку на бирже, а затем передать ход."}</p>
     ${tile.type === "mining"
-      ? `<div class="mine-controls">${miningButton}<button class="button button-secondary" data-action="buy-miner">Купить ферму</button></div><button class="button button-primary" data-action="end-turn">Завершить ход</button>`
+      ? `<div class="mine-controls">${miningButton}<button class="button button-secondary" data-action="buy-miner">Купить фермы</button></div><button class="button button-primary" data-action="end-turn">Завершить ход</button>`
       : `<div class="action-controls"><button class="button button-primary" data-action="end-turn">Завершить ход</button></div>`}`;
 }
 
@@ -331,7 +339,11 @@ document.addEventListener("click", async (event) => {
   if (action === "buy-miner") {
     return send({
       type: "action",
-      action: { type: "buy-miner", quantity: Number($("#miner-quantity").value) }
+      action: {
+        type: "buy-miner",
+        symbol: $("#miner-asset")?.value || "BTC",
+        quantity: Number($("#miner-quantity").value)
+      }
     });
   }
   send({ type: "action", action: { type: action } });
