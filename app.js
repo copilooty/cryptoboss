@@ -340,7 +340,8 @@ document.addEventListener("click", async (event) => {
 if (savedSession?.name) {
   playerNameInput.value = savedSession.name;
 } else {
-  playerNameInput.value = randomRussianName();
+  playerNameInput.value = "";
+  playerNameInput.placeholder = randomRussianName();
 }
 if (savedSession?.code) roomCodeInput.value = savedSession.code;
 if (location.hash.length === 7) roomCodeInput.value = location.hash.slice(1).toUpperCase();
