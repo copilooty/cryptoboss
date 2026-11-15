@@ -9,6 +9,10 @@ const playerNameInput = $("#player-name");
 const roomCodeInput = $("#room-code");
 const connectionLabel = $("#connection-label");
 const storedKey = "cryptoboss-room";
+const russianNames = [
+  "Марина", "Даниил", "Алина", "Семён", "Кира", "Иван", "Полина", "Роман", "Ева", "Арсений",
+  "Виктория", "Максим", "Надя", "Глеб", "Ольга", "Тимур", "Вероника", "Лев", "Анна", "Павел"
+];
 const colors = ["#58d6aa", "#ff6573", "#66d8ef", "#f3aa28"];
 const borderCells = [
   ...Array.from({ length: 7 }, (_, column) => [1, column + 1]),
@@ -97,6 +101,11 @@ function send(message) {
     return;
   }
   socket.send(JSON.stringify(message));
+}
+
+function randomRussianName() {
+  const name = russianNames[Math.floor(Math.random() * russianNames.length)];
+  return name;
 }
 
 function rememberPlayer(name, code, playerId) {
@@ -328,7 +337,11 @@ document.addEventListener("click", async (event) => {
   send({ type: "action", action: { type: action } });
 });
 
-if (savedSession?.name) playerNameInput.value = savedSession.name;
+if (savedSession?.name) {
+  playerNameInput.value = savedSession.name;
+} else {
+  playerNameInput.value = randomRussianName();
+}
 if (savedSession?.code) roomCodeInput.value = savedSession.code;
 if (location.hash.length === 7) roomCodeInput.value = location.hash.slice(1).toUpperCase();
 connect();

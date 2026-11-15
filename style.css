@@ -51,9 +51,22 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
   backdrop-filter: blur(18px);
   box-shadow: 0 12px 25px rgba(0, 0, 0, 0.14);
 }
+.brand-group { display: flex; align-items: center; gap: 26px; }
 .brand { color: var(--text); text-decoration: none; font-weight: 900; letter-spacing: .08em; font-size: 15px; }
 .brand-mark { display: inline-grid; place-items: center; width: 28px; height: 28px; margin-right: 8px; border-radius: 9px; color: #18130c; background: linear-gradient(135deg, #f9d28e, #f2b45a); }
 .brand-gold { color: var(--gold); }
+.topbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.topbar-nav a, .about-link {
+  color: var(--muted);
+  font: 11px "DM Mono", monospace;
+  text-decoration: none;
+  transition: color .2s ease;
+}
+.topbar-nav a:hover, .about-link:hover { color: var(--green); }
 .topbar-right { display: flex; align-items: center; gap: 27px; }
 .online-indicator, .about-link { color: var(--muted); font: 11px "DM Mono", monospace; }
 .online-indicator { display: flex; align-items: center; gap: 8px; }
